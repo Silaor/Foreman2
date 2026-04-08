@@ -507,6 +507,9 @@ local function ExportEntities()
 				tentity['speed'] = entity.pumping_speed
 			elseif entity.type == 'furnace' or entity.type == 'assembling-machine' or entity.type == 'rocket-silo' then
 				tentity['q_speed'] = ProcessQualityValue(entity.get_crafting_speed, 1)
+				if entity.type == 'rocket-silo' then
+					tentity['rocket_weight_capacity'] = entity.rocket_weight_capacity
+				end
 			end
 
 			if entity.fluid_usage_per_tick ~= nil then tentity['fluid_usage_per_sec'] = entity.fluid_usage_per_tick * 60 end
