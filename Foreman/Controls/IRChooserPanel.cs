@@ -605,7 +605,6 @@ namespace Foreman
 			AddUnspoilButton.Click += AddUnSpoilButton_Click;
 			AddPlantButton.Click += AddPlantButton_Click;
 			AddUnplantButton.Click += AddUnPlantButton_Click;
-			AddSendToSpaceButton.Click += AddSendToSpaceButton_Click;
 
 			AsIngredientCheckBox.CheckedChanged += FilterCheckBox_CheckedChanged;
 			AsProductCheckBox.CheckedChanged += FilterCheckBox_CheckedChanged;
@@ -630,8 +629,7 @@ namespace Foreman
 				AddUnspoilButton.Visible = asProduct && KeyItem.Item.SpoilOrigins.Count > 0;
 				AddPlantButton.Visible = asIngredient && KeyItem.Item.PlantResult != null;
 				AddUnplantButton.Visible = asProduct && isDefaultQuality && KeyItem.Item.PlantOrigins.Count > 0;
-				AddSendToSpaceButton.Visible = asIngredient && KeyItem.Item.Weight > 0 && DCache.Recipes.ContainsKey(string.Format("§§r:space:{0}", KeyItem.Item.Name));
-				int totalVisible = (AddSpoilButton.Visible ? 1 : 0) + (AddUnspoilButton.Visible ? 1 : 0) + (AddPlantButton.Visible ? 1 : 0) + (AddUnplantButton.Visible ? 1 : 0) + (AddSendToSpaceButton.Visible ? 1 : 0);
+				int totalVisible = (AddSpoilButton.Visible ? 1 : 0) + (AddUnspoilButton.Visible ? 1 : 0) + (AddPlantButton.Visible ? 1 : 0) + (AddUnplantButton.Visible ? 1 : 0);
 				OtherNodeOptionsBTable.Visible = totalVisible > 0;
 
 				bool hasConsumptionRecipes = Properties.Settings.Default.ShowUnavailable? KeyItem.Item.ConsumptionRecipes.Count > 0 : KeyItem.Item.ConsumptionRecipes.Count(r => r.Available) > 0;
@@ -865,22 +863,6 @@ namespace Foreman
                 panelCloseReason = ChooserPanelCloseReason.RequiresItemSelection;
                 RecipeRequested?.Invoke(this, new RecipeRequestArgs(NodeType.Plant, NodeDirection.Down));
                 //Dispose(); //since close reason is 'requires item selection, this will panel will auto close on 'recipe requested' invoke
-            }
-        }
-
-        private void AddSendToSpaceButton_Click(object sender, EventArgs e)
-        {
-            string recipeKey = string.Format("§§r:space:{0}", KeyItem.Item.Name);
-            if (DCache.Recipes.ContainsKey(recipeKey))
-            {
-                RecipeRequested?.Invoke(this, new RecipeRequestArgs(
-                    new RecipeQualityPair(DCache.Recipes[recipeKey], KeyItem.Quality)));
-
-                if ((Control.ModifierKeys & Keys.Shift) != Keys.Shift)
-                {
-                    panelCloseReason = ChooserPanelCloseReason.AltNodeSelected;
-                    Dispose();
-                }
             }
         }
 

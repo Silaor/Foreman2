@@ -35,7 +35,6 @@ namespace Foreman
             this.AddPlantButton = new System.Windows.Forms.Button();
             this.AddUnspoilButton = new System.Windows.Forms.Button();
             this.AddUnplantButton = new System.Windows.Forms.Button();
-            this.AddSendToSpaceButton = new System.Windows.Forms.Button();
             this.TopOptionsTable = new System.Windows.Forms.TableLayoutPanel();
             this.ItemIconPanel = new System.Windows.Forms.Panel();
             this.RecipeNameOnlyFilterCheckBox = new System.Windows.Forms.CheckBox();
@@ -105,16 +104,13 @@ namespace Foreman
             this.OtherNodeOptionsBTable.Controls.Add(this.AddPlantButton, 3, 0);
             this.OtherNodeOptionsBTable.Controls.Add(this.AddUnspoilButton, 0, 0);
             this.OtherNodeOptionsBTable.Controls.Add(this.AddUnplantButton, 1, 0);
-            this.OtherNodeOptionsBTable.Controls.Add(this.AddSendToSpaceButton, 0, 1);
-            this.OtherNodeOptionsBTable.SetColumnSpan(this.AddSendToSpaceButton, 4);
             this.OtherNodeOptionsBTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OtherNodeOptionsBTable.Location = new System.Drawing.Point(0, 387);
             this.OtherNodeOptionsBTable.Margin = new System.Windows.Forms.Padding(0);
             this.OtherNodeOptionsBTable.Name = "OtherNodeOptionsBTable";
-            this.OtherNodeOptionsBTable.RowCount = 2;
+            this.OtherNodeOptionsBTable.RowCount = 1;
             this.OtherNodeOptionsBTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OtherNodeOptionsBTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OtherNodeOptionsBTable.Size = new System.Drawing.Size(287, 48);
+            this.OtherNodeOptionsBTable.Size = new System.Drawing.Size(287, 24);
             this.OtherNodeOptionsBTable.TabIndex = 7;
             this.OtherNodeOptionsBTable.Visible = false;
             // 
@@ -169,19 +165,6 @@ namespace Foreman
             this.AddUnplantButton.TabIndex = 10;
             this.AddUnplantButton.Text = "UnPlant";
             this.AddUnplantButton.UseVisualStyleBackColor = true;
-            //
-            // AddSendToSpaceButton
-            //
-            this.AddSendToSpaceButton.AutoSize = true;
-            this.AddSendToSpaceButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.AddSendToSpaceButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddSendToSpaceButton.Location = new System.Drawing.Point(3, 24);
-            this.AddSendToSpaceButton.Margin = new System.Windows.Forms.Padding(3, 0, 3, 1);
-            this.AddSendToSpaceButton.Name = "AddSendToSpaceButton";
-            this.AddSendToSpaceButton.Size = new System.Drawing.Size(281, 23);
-            this.AddSendToSpaceButton.TabIndex = 14;
-            this.AddSendToSpaceButton.Text = "Send to Space";
-            this.AddSendToSpaceButton.UseVisualStyleBackColor = true;
             //
             // TopOptionsTable
             // 
@@ -566,7 +549,6 @@ namespace Foreman
         protected System.Windows.Forms.Button AddPlantButton;
         protected System.Windows.Forms.Button AddUnspoilButton;
         protected System.Windows.Forms.Button AddUnplantButton;
-        protected System.Windows.Forms.Button AddSendToSpaceButton;
         protected System.Windows.Forms.Label QualityLabel;
         internal System.Windows.Forms.TableLayoutPanel QualitySelectorTable;
         internal System.Windows.Forms.ComboBox QualitySelector;
