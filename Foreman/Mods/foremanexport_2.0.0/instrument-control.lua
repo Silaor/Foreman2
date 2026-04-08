@@ -801,6 +801,16 @@ script.on_nth_tick(1,
 			etable['rocket_lift_weight'] = rocket_lift_weight
 		end
 
+		local ok2, rocket_cargo_slots = pcall(function()
+			local silo = prototypes.entity["rocket-silo"]
+			local rocket = prototypes.entity[silo.rocket_entity_prototype.name]
+			local pod = prototypes.entity[rocket.cargo_pod_entity]
+			return pod.inventory_size
+		end)
+		if ok2 and rocket_cargo_slots ~= nil then
+			etable['rocket_cargo_slots'] = rocket_cargo_slots
+		end
+
 		localised_print('<<<START-EXPORT-LN>>>')
 
 		ExportModList()
