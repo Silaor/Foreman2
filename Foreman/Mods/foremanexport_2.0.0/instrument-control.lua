@@ -796,7 +796,10 @@ script.on_nth_tick(1,
 
 		etable['difficulty'] = {0,0}
 		etable['foreman_export_version'] = FOREMAN_EXPORT_VERSION
-		etable['rocket_lift_weight'] = prototypes.utility_constants["rocket_lift_weight"]
+		local ok, rocket_lift_weight = pcall(function() return prototypes.utility_constants["rocket_lift_weight"] end)
+		if ok and rocket_lift_weight ~= nil then
+			etable['rocket_lift_weight'] = rocket_lift_weight
+		end
 
 		localised_print('<<<START-EXPORT-LN>>>')
 
