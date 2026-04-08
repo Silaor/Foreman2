@@ -507,9 +507,6 @@ local function ExportEntities()
 				tentity['speed'] = entity.pumping_speed
 			elseif entity.type == 'furnace' or entity.type == 'assembling-machine' or entity.type == 'rocket-silo' then
 				tentity['q_speed'] = ProcessQualityValue(entity.get_crafting_speed, 1)
-				if entity.type == 'rocket-silo' then
-					tentity['rocket_weight_capacity'] = entity.rocket_weight_capacity
-				end
 			end
 
 			if entity.fluid_usage_per_tick ~= nil then tentity['fluid_usage_per_sec'] = entity.fluid_usage_per_tick * 60 end
@@ -799,6 +796,7 @@ script.on_nth_tick(1,
 
 		etable['difficulty'] = {0,0}
 		etable['foreman_export_version'] = FOREMAN_EXPORT_VERSION
+		etable['rocket_lift_weight'] = prototypes.utility_constants["default"].rocket_lift_weight
 
 		localised_print('<<<START-EXPORT-LN>>>')
 
