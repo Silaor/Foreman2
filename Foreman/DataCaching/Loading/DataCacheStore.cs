@@ -34,6 +34,7 @@ namespace Foreman.DataCaching.Loading {
         public SubgroupPrototype? EnergySubgroupBoiling { get; set; }
         public SubgroupPrototype? EnergySubgroupEnergy { get; set; }
         public SubgroupPrototype? RocketLaunchSubgroup { get; set; }
+        public SubgroupPrototype? SpaceExportSubgroup { get; set; }
 
         public ItemPrototype? HeatItem { get; set; }
         public RecipePrototype? HeatRecipe { get; set; }

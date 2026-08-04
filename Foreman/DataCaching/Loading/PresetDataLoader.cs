@@ -68,6 +68,73 @@ namespace Foreman.DataCaching.Loading {
                 ProcessRocketLaunch(objJsonNode);
         }
 
+        public void LoadSpaceExports(JsonObject jsonData) {
+            if (_store.SpaceExportSubgroup is null || _store.RocketAssembler is null)
+                return;
+            if (!_store.Items.TryGetValue("rocket-part", out _) || !_store.Recipes.TryGetValue("rocket-part", out _) || !_store.Assemblers.TryGetValue("rocket-silo", out _)) {
+                ErrorLogging.LogLine("No rocket-part recipe or rocket-silo found — space export recipes will not be generated.");
+                return;
+            }
+
+            double rocketCapacity = PresetJson.GetDouble(jsonData, "rocket_lift_weight") ?? 1000.0;
+            int rocketCargoSlots = PresetJson.GetInt32(jsonData, "rocket_cargo_slots") ?? 10;
+
+            foreach (var objJsonNode in PresetJson.EnumerateArray(jsonData, "items")) {
+                double weight = PresetJson.GetDouble(objJsonNode, "weight") ?? 0;
+                if (weight <= 0)
+                    continue;
+                if (PresetJson.GetString(objJsonNode, "name") is not string name)
+                    continue;
+                if (name == "rocket-part")
+                    continue;
+                if (!_store.Items.TryGetValue(name, out IItem? iitem) || iitem is not ItemPrototype item)
+                    continue;
+
+                ProcessSpaceExport(item, weight, rocketCapacity, rocketCargoSlots);
+            }
+        }
+
+        private void ProcessSpaceExport(ItemPrototype item, double weight, double rocketCapacity, int rocketCargoSlots) {
+            var rocketPart = (ItemPrototype)_store.Items["rocket-part"];
+            var rocketPartRecipe = (RecipePrototype)_store.Recipes["rocket-part"];
+
+            int itemsPerRocket = (int)Math.Floor(rocketCapacity / weight);
+            if (rocketCargoSlots > 0)
+                itemsPerRocket = Math.Min(itemsPerRocket, rocketCargoSlots * item.StackSize);
+            if (itemsPerRocket <= 0)
+                itemsPerRocket = 1;
+
+            var recipe = new RecipePrototype(
+                _owner,
+                string.Format(CultureInfo.InvariantCulture, "§§r:space:{0}", item.Name),
+                string.Format(DisplayCulture.Format, "Send to Space: {0}", item.FriendlyName),
+                _store.SpaceExportSubgroup!,
+                item.Name) {
+                Time = 1
+            };
+
+            recipe.InternalOneWayAddProduct(item, itemsPerRocket, 0);
+            item.ProductionRecipesInternal.Add(recipe);
+
+            recipe.InternalOneWayAddIngredient(item, itemsPerRocket);
+            item.ConsumptionRecipesInternal.Add(recipe);
+
+            recipe.InternalOneWayAddIngredient(rocketPart, 100);
+            rocketPart.ConsumptionRecipesInternal.Add(recipe);
+
+            recipe.SetIconAndColor(new IconColorPair(item.Icon, Color.DarkBlue));
+
+            foreach (TechnologyPrototype tech in rocketPartRecipe.MyUnlockTechnologiesInternal) {
+                recipe.MyUnlockTechnologiesInternal.Add(tech);
+                tech.UnlockedRecipesInternal.Add(recipe);
+            }
+
+            recipe.AssemblersInternal.Add(_store.RocketAssembler!);
+            _store.RocketAssembler!.RecipesInternal.Add(recipe);
+
+            _store.Recipes.Add(recipe.Name, recipe);
+        }
+
         internal void ProcessMod(JsonNode objJsonNode) {
             if (PresetJson.GetString(objJsonNode, "name") is string name && PresetJson.GetString(objJsonNode, "version") is string version)
                 _store.IncludedMods.Add(name, version);

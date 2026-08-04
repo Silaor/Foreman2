@@ -164,6 +164,31 @@ namespace Foreman.DataCaching {
                 }
             }
 
+            //process space export recipes
+            if (presetItems.Contains("rocket-part") && presetRecipes.ContainsKey("rocket-part") && presetEntities.Contains("rocket-silo")) {
+                double rocketWeightCapacity = PresetJson.GetDouble(jsonData, "rocket_lift_weight") ?? 1000.0;
+                int rocketCargoSlots = PresetJson.GetInt32(jsonData, "rocket_cargo_slots") ?? 10;
+
+                foreach (JsonNode objJsonNode in PresetJson.EnumerateArray(jsonData, "items").Where(t => PresetJson.GetDouble(t, "weight") is > 0)) {
+                    if (PresetJson.GetString(objJsonNode, "name") is not string itemName)
+                        continue;
+                    if (itemName == "rocket-part")
+                        continue;
+                    double itemWeight = PresetJson.GetDouble(objJsonNode, "weight")!.Value;
+                    int stackSize = PresetJson.GetInt32(objJsonNode, "stack_size") ?? 1;
+                    int itemsPerRocket = (int)Math.Floor(rocketWeightCapacity / itemWeight);
+                    if (rocketCargoSlots > 0)
+                        itemsPerRocket = Math.Min(itemsPerRocket, rocketCargoSlots * stackSize);
+                    if (itemsPerRocket <= 0) itemsPerRocket = 1;
+
+                    var recipe = new RecipeShort(string.Format(CultureInfo.InvariantCulture, "§§r:space:{0}", itemName));
+                    recipe.Ingredients.Add(itemName, itemsPerRocket);
+                    recipe.Ingredients.Add("rocket-part", 100);
+                    recipe.Products.Add(itemName, itemsPerRocket);
+                    presetRecipes.TryAdd(recipe.Name, recipe);
+                }
+            }
+
             //process launch product recipes
             if (presetItems.Contains("rocket-part") && presetRecipes.ContainsKey("rocket-part") && presetEntities.Contains("rocket-silo")) {
                 foreach (JsonNode objJsonNode in PresetJson.EnumerateArray(jsonData, "items").Concat(PresetJson.EnumerateArray(jsonData, "fluids")).Where(t => PresetJson.GetNode(t, "rocket_launch_products") is not null)) {

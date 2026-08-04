@@ -91,6 +91,7 @@ namespace Foreman.DataCaching {
                 entityLoader.LoadEntities(jsonData, _store.IconCache);
                 entityLoader.LinkRecipesToCraftingCategoryMachines();
                 presetLoader.LoadRocketLaunches(jsonData);
+                presetLoader.LoadSpaceExports(jsonData);
                 entityLoader.LoadCharacter(
                     PresetJson.EnumerateArray(jsonData, "entities").FirstOrDefault(a => PresetJson.GetString(a, "name") == "character"));
 

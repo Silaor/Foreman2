@@ -49,6 +49,11 @@ namespace Foreman.DataCaching.Loading {
             };
             store.ExtraFormanGroup.SubgroupsInternal.Add(store.RocketLaunchSubgroup);
 
+            store.SpaceExportSubgroup = new SubgroupPrototype(owner, "§§sg:space_exports", "7") {
+                MyGroupInternal = store.ExtraFormanGroup
+            };
+            store.ExtraFormanGroup.SubgroupsInternal.Add(store.SpaceExportSubgroup);
+
             store.ErrorQuality = new QualityPrototype(owner, "§§error_quality", "ERROR", "-");
 
             var heatIconBmp = IconCache.GetIcon(Path.Combine("Graphics", "HeatIcon.png"), 64);
