@@ -796,8 +796,21 @@ script.on_nth_tick(1,
 
 		etable['difficulty'] = {0,0}
 		etable['foreman_export_version'] = FOREMAN_EXPORT_VERSION
-		local ok, rocket_lift_weight = pcall(function() return prototypes.utility_constants["rocket_lift_weight"] end)
-		if ok and rocket_lift_weight ~= nil then
+		-- Try the renamed field first (Factorio >= 2.1.12), fall back to the old key, then to the silo entity.
+		local rocket_lift_weight = nil
+		local ok1, v1 = pcall(function() return prototypes.utility_constants["default_rocket_lift_weight"] end)
+		if ok1 and v1 ~= nil then
+			rocket_lift_weight = v1
+		else
+			local ok2, v2 = pcall(function() return prototypes.utility_constants["rocket_lift_weight"] end)
+			if ok2 and v2 ~= nil then
+				rocket_lift_weight = v2
+			else
+				local ok3, v3 = pcall(function() return prototypes.entity["rocket-silo"].lift_weight end)
+				if ok3 and v3 ~= nil then rocket_lift_weight = v3 end
+			end
+		end
+		if rocket_lift_weight ~= nil then
 			etable['rocket_lift_weight'] = rocket_lift_weight
 		end
 
